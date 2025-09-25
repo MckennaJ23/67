@@ -4,70 +4,125 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mckenna | Profile</title>
+  
+  <!-- Import a cool Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0a1f44; /* navy blue */
-      color: white;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fafafa;
+      color: #262626;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
+    /* Top bar (like Instagram) */
     header {
       width: 100%;
-      padding: 20px;
+      padding: 15px 20px;
+      background-color: #fff;
+      border-bottom: 1px solid #dbdbdb;
       display: flex;
-      justify-content: flex-start;
-      background-color: #f78da7; /* pink */
-      position: absolute;
-      top: 0;
-      left: 0;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 20px;
     }
 
-    header a img {
-      height: 120px;   /* bigger circle */
-      width: 120px;
-      border-radius: 50%;   /* makes it a circle */
-      border: 3px solid white;
-      object-fit: cover;    /* zooms into face/center nicely */
-      transition: transform 0.2s ease-in-out;
+    /* Profile section */
+    .profile {
+      display: flex;
+      align-items: center;
+      margin: 40px 0;
+      width: 90%;
+      max-width: 800px;
     }
 
-    header a img:hover {
-      transform: scale(1.1); /* zoom effect on hover */
+    .profile-img {
+      flex: 1;
+      display: flex;
+      justify-content: center;
     }
 
-    main {
-      text-align: center;
-      margin-top: 160px; /* space so text isn't hidden behind header */
+    .profile-img img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #f78da7;
+      object-fit: cover;
     }
 
-    h1 {
-      font-size: 2.5rem;
+    .profile-info {
+      flex: 2;
+      padding-left: 30px;
+    }
+
+    .profile-info h1 {
+      font-size: 24px;
       margin: 0;
+      font-weight: 600;
     }
 
-    p {
-      font-size: 1.3rem;
-      color: #f78da7; /* pink */
+    .profile-info p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .bio {
+      margin-top: 15px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* Fake posts grid */
+    .posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      width: 90%;
+      max-width: 1000px;
+      margin-bottom: 40px;
+    }
+
+    .posts img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
   <header>
-    <a href="https://github.com/YourGitHubUsername" target="_blank">
-      <img src="profile.jpg" alt="Profile Picture">
-    </a>
+    Mckenna
   </header>
 
-  <main>
-    <h1>Mckenna</h1>
-    <p>East Coast Wizards #23</p>
-    <p>DXSF '30</p>
-  </main>
+  <section class="profile">
+    <div class="profile-img">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+    <div class="profile-info">
+      <h1>Mckenna</h1>
+      <p><strong>23</strong> • East Coast Wizards</p>
+      <p>DXSF '30</p>
+      <div class="bio">
+        🏒 Hockey player <br>
+        📍 East Coast <br>
+        🔗 <a href="https://github.com/YourGitHubUsername" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fake posts grid (you can replace with real pics later) -->
+  <section class="posts">
+    <img src="profile.jpg" alt="Post 1">
+    <img src="profile.jpg" alt="Post 2">
+    <img src="profile.jpg" alt="Post 3">
+  </section>
 </body>
 </html>
+
