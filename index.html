@@ -28,17 +28,22 @@
       left: 0;
     }
 
-    header img {
-      height: 100px;   /* bigger size */
-      width: 100px;
-      border-radius: 50%;
+    header a img {
+      height: 120px;   /* bigger circle */
+      width: 120px;
+      border-radius: 50%;   /* makes it a circle */
       border: 3px solid white;
-      object-fit: cover;
+      object-fit: cover;    /* zooms into face/center nicely */
+      transition: transform 0.2s ease-in-out;
+    }
+
+    header a img:hover {
+      transform: scale(1.1); /* zoom effect on hover */
     }
 
     main {
       text-align: center;
-      margin-top: 140px; /* space so text isn't hidden behind header */
+      margin-top: 160px; /* space so text isn't hidden behind header */
     }
 
     h1 {
@@ -54,7 +59,9 @@
 </head>
 <body>
   <header>
-    <img src="ba449645-338c-4bac-8c8b-b7102d8b28b5.jpeg" alt="Profile Picture">
+    <a href="https://github.com/YourGitHubUsername" target="_blank">
+      <img src="profile.jpg" alt="Profile Picture">
+    </a>
   </header>
 
   <main>
