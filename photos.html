@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mckenna Johnson | Photos</title>
+  
+  <!-- Cool Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fafafa;
+      color: #262626;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Top bar */
+    header {
+      width: 100%;
+      padding: 15px 20px;
+      background-color: #fff;
+      border-bottom: 1px solid #dbdbdb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 20px;
+    }
+
+    header a {
+      color: #262626;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    header a:hover {
+      text-decoration: underline;
+    }
+
+    /* Page title */
+    h1 {
+      margin: 30px 0;
+      font-size: 28px;
+    }
+
+    /* Photos grid */
+    .photos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      width: 90%;
+      max-width: 1000px;
+      margin-bottom: 40px;
+    }
+
+    .photos img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #f78da7;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .photos img:hover {
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>Mckenna Johnson</div>
+    <a href="index.html">Back to Profile</a>
+  </header>
+
+  <h1>Photo Gallery</h1>
+
+  <section class="photos">
+    <!-- Add your own photos here -->
+    <img src="profile.jpg" alt="Photo 1">
+    <img src="profile.jpg" alt="Photo 2">
+    <img src="profile.jpg" alt="Photo 3">
+    <img src="profile.jpg" alt="Photo 4">
+  </section>
+</body>
+</html>
 
