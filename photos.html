@@ -12,8 +12,8 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #0a1f44; /* navy blue */
-      color: white;
+      background-color: #fff; /* white background */
+      color: #0a1f44; /* navy text for contrast */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -25,8 +25,8 @@
       width: 100%;
       padding: 15px 20px;
       background-color: #f78da7; /* pink */
-      color: #0a1f44;           /* navy text */
-      border-bottom: 2px solid #0a1f44;
+      color: white; /* white text */
+      border-bottom: 2px solid #f78da7;
       display: flex;
       justify-content: center;
       font-weight: 600;
@@ -62,7 +62,7 @@
 
     .photos img:hover {
       transform: scale(1.03);
-      box-shadow: 0 4px 15px rgba(247, 141, 167, 0.5);
+      box-shadow: 0 4px 15px rgba(247, 141, 167, 0.4);
     }
 
     /* Button */
@@ -70,8 +70,8 @@
       display: inline-block;
       margin: 20px 0;
       padding: 12px 24px;
-      background-color: #f78da7;
-      color: #0a1f44;
+      background-color: #f78da7; /* pink */
+      color: white;
       font-weight: 600;
       text-decoration: none;
       border-radius: 10px;
@@ -81,7 +81,6 @@
 
     .btn:hover {
       background-color: #e06788;
-      color: white;
     }
   </style>
 </head>
@@ -94,13 +93,14 @@
 
   <section class="photos">
     <!-- Replace these with your own photos -->
-    <img src="profile.jpg" alt="Photo 1">
-    <img src="profile.jpg" alt="Photo 2">
-    <img src="profile.jpg" alt="Photo 3">
-    <img src="profile.jpg" alt="Photo 4">
+    <img src="0EFFF89A-63D3-4602-A1A3-895A47DE434A_1_105_c.jpeg" alt="Photo 1">
+    <img src="1E419C6B-FCBA-4419-B1BC-225D115DBB2D_1_105_c.jpeg" alt="Photo 2">
+    <img src="9D7CE81B-29C0-4B09-8A77-1FEA99C09EBA_1_105_c.jpeg" alt="Photo 3">
+    <img src="A48524EF-6FD5-47BA-A9F0-9A9FAE69E59C_1_105_c.jpeg" alt="Photo 4">
   </section>
 
   <!-- Back to profile button -->
   <a href="index.html" class="btn">⬅️ Back to Profile</a>
 </body>
 </html>
+
