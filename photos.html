@@ -12,8 +12,8 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #fafafa;
-      color: #262626;
+      background-color: #0a1f44; /* navy blue */
+      color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -24,30 +24,21 @@
     header {
       width: 100%;
       padding: 15px 20px;
-      background-color: #fff;
-      border-bottom: 1px solid #dbdbdb;
+      background-color: #f78da7; /* pink */
+      color: #0a1f44;           /* navy text */
+      border-bottom: 2px solid #0a1f44;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
       font-weight: 600;
-      font-size: 20px;
-    }
-
-    header a {
-      color: #262626;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 400;
-    }
-
-    header a:hover {
-      text-decoration: underline;
+      font-size: 22px;
+      letter-spacing: 1px;
     }
 
     /* Page title */
     h1 {
-      margin: 30px 0;
+      margin: 30px 0 20px;
       font-size: 28px;
+      color: #f78da7; /* pink title */
     }
 
     /* Photos grid */
@@ -64,31 +55,52 @@
       width: 100%;
       height: 250px;
       object-fit: cover;
-      border-radius: 10px;
-      border: 2px solid #f78da7;
-      transition: transform 0.2s ease-in-out;
+      border-radius: 12px;
+      border: 3px solid #f78da7;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
 
     .photos img:hover {
       transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(247, 141, 167, 0.5);
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 12px 24px;
+      background-color: #f78da7;
+      color: #0a1f44;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      background-color: #e06788;
+      color: white;
     }
   </style>
 </head>
 <body>
   <header>
-    <div>Mckenna Johnson</div>
-    <a href="index.html">Back to Profile</a>
+    Mckenna Johnson
   </header>
 
   <h1>Photo Gallery</h1>
 
   <section class="photos">
-    <!-- Add your own photos here -->
-    <img src="9D7CE81B-29C0-4B09-8A77-1FEA99C09EBA_1_105_c.jpeg" alt="Photo 1">
-    <img src="0EFFF89A-63D3-4602-A1A3-895A47DE434A_1_105_c.jpeg" alt="Photo 2">
-    <img src="A48524EF-6FD5-47BA-A9F0-9A9FAE69E59C_1_105_c.jpeg" alt="Photo 3">
-    <img src="1E419C6B-FCBA-4419-B1BC-225D115DBB2D_1_105_c.jpeg" alt="Photo 4">
+    <!-- Replace these with your own photos -->
+    <img src="profile.jpg" alt="Photo 1">
+    <img src="profile.jpg" alt="Photo 2">
+    <img src="profile.jpg" alt="Photo 3">
+    <img src="profile.jpg" alt="Photo 4">
   </section>
+
+  <!-- Back to profile button -->
+  <a href="index.html" class="btn">⬅️ Back to Profile</a>
 </body>
 </html>
-
