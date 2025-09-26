@@ -6,22 +6,66 @@
 <style>
   body {
     margin: 0;
-    background: #0b3d91;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(#0b3d91, #1a73e8);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     height: 100vh;
     overflow: hidden;
+    color: white;
   }
+
+  header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    align-items: center;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    background-color: #f78da7;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background-color: #e06788;
+  }
+
   canvas {
-    background: #cce6ff;
+    background: linear-gradient(to bottom, #cce6ff, #99d6ff);
     border: 4px solid #ffffff;
     display: block;
+    margin-top: 20px;
+    box-shadow: 0 0 20px #0b3d91;
+  }
+
+  #playAgain {
+    display: none;
+    margin-top: 15px;
   }
 </style>
 </head>
 <body>
+
+<header>
+  <a href="index.html" class="btn">⬅ Back to Profile</a>
+  <span>Use ↑ ↓ arrows to move</span>
+</header>
+
 <canvas id="gameCanvas" width="900" height="500"></canvas>
+<button id="playAgain" class="btn">Play Again</button>
+
 <script>
 // Sounds
 const puckHitSound = new Audio('https://freesound.org/data/previews/66/66717_634166-lq.mp3');
@@ -35,17 +79,23 @@ const ctx = canvas.getContext('2d');
 const paddleWidth = 20;
 const paddleHeight = 100;
 const puckRadius = 12;
+let gameOver = false;
 
 let leftPaddle = { x: 20, y: canvas.height/2 - paddleHeight/2, dy: 0 };
-let rightPaddle = { x: canvas.width - 40, y: canvas.height/2 - paddleHeight/2, dy: 0, speed: 4 };
+let rightPaddle = { x: canvas.width - 40, y: canvas.height/2 - paddleHeight/2, dy: 0, speed: 2 }; // easier AI
 let puck = { x: canvas.width/2, y: canvas.height/2, dx: 5, dy: 4, trail: [] };
 
 let leftScore = 0;
 let rightScore = 0;
+const maxScore = 5;
 
 // Draw ice rink
 function drawRink() {
-  ctx.fillStyle = '#cce6ff';
+  // Ice background
+  const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grd.addColorStop(0, '#cce6ff');
+  grd.addColorStop(1, '#99d6ff');
+  ctx.fillStyle = grd;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.strokeStyle = '#ff0000';
@@ -58,14 +108,12 @@ function drawRink() {
   ctx.stroke();
 
   // Center circle
-  ctx.strokeStyle = '#ff0000';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(canvas.width/2, canvas.height/2, 60, 0, Math.PI*2);
   ctx.stroke();
 
   // Faceoff circles
-  ctx.strokeStyle = '#ff0000';
   [[100, canvas.height/4], [100, 3*canvas.height/4], [canvas.width-100, canvas.height/4], [canvas.width-100, 3*canvas.height/4]].forEach(([x, y]) => {
     ctx.beginPath();
     ctx.arc(x, y, 30, 0, Math.PI*2);
@@ -73,17 +121,20 @@ function drawRink() {
   });
 }
 
-// Draw paddles as hockey sticks
+// Draw paddles
 function drawPaddle(paddle) {
   ctx.fillStyle = '#ff0000';
+  ctx.shadowColor = '#ff8080';
+  ctx.shadowBlur = 10;
   ctx.beginPath();
   ctx.moveTo(paddle.x, paddle.y);
   ctx.lineTo(paddle.x + 10, paddle.y + paddleHeight/2);
   ctx.lineTo(paddle.x, paddle.y + paddleHeight);
   ctx.fill();
+  ctx.shadowBlur = 0;
 }
 
-// Draw puck with skid trail
+// Draw puck with glow
 function drawPuck() {
   puck.trail.forEach((pos, i) => {
     ctx.fillStyle = `rgba(0,0,0,${0.3 - i*0.04})`;
@@ -92,9 +143,12 @@ function drawPuck() {
     ctx.fill();
   });
   ctx.fillStyle = '#000000';
+  ctx.shadowColor = '#ffffff';
+  ctx.shadowBlur = 20;
   ctx.beginPath();
   ctx.arc(puck.x, puck.y, puckRadius, 0, Math.PI*2);
   ctx.fill();
+  ctx.shadowBlur = 0;
 }
 
 // Draw scores
@@ -107,6 +161,8 @@ function drawScores() {
 
 // Update game
 function update() {
+  if(gameOver) return;
+
   puck.x += puck.dx;
   puck.y += puck.dy;
 
@@ -144,11 +200,18 @@ function update() {
     resetPuck();
   }
 
+  // Check win
+  if(leftScore >= maxScore || rightScore >= maxScore) {
+    gameOver = true;
+    document.getElementById('playAgain').style.display = 'block';
+    alert(leftScore > rightScore ? 'You Win!' : 'AI Wins!');
+  }
+
   // Update paddles
   leftPaddle.y += leftPaddle.dy;
   leftPaddle.y = Math.max(Math.min(leftPaddle.y, canvas.height - paddleHeight), 0);
 
-  // AI paddle follows puck
+  // AI paddle follows puck (easier)
   let targetY = puck.y - paddleHeight/2;
   if(rightPaddle.y + rightPaddle.speed < targetY) {
     rightPaddle.y += rightPaddle.speed;
@@ -185,14 +248,25 @@ function gameLoop() {
 
 // Controls
 document.addEventListener('keydown', (e) => {
-  if(e.key === 'w') leftPaddle.dy = -6;
-  if(e.key === 's') leftPaddle.dy = 6;
+  if(e.key === 'ArrowUp') leftPaddle.dy = -6;
+  if(e.key === 'ArrowDown') leftPaddle.dy = 6;
 });
 document.addEventListener('keyup', (e) => {
-  if(e.key === 'w' || e.key === 's') leftPaddle.dy = 0;
+  if(e.key === 'ArrowUp' || e.key === 'ArrowDown') leftPaddle.dy = 0;
+});
+
+// Play Again
+document.getElementById('playAgain').addEventListener('click', () => {
+  leftScore = 0;
+  rightScore = 0;
+  gameOver = false;
+  resetPuck();
+  document.getElementById('playAgain').style.display = 'none';
 });
 
 gameLoop();
 </script>
+
 </body>
 </html>
+
