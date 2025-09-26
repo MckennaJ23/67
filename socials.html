@@ -3,105 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mckenna Johnson | Socials</title>
-  
-  <!-- Cool Google Font -->
+  <title>Socials</title>
+
+  <!-- Import Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #0a1f44; /* navy */
-      color: white;
+      background-color: #ffe4f0; /* light pink */
+      color: #333;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      padding: 20px;
     }
 
     header {
       width: 100%;
-      padding: 15px 20px;
-      background-color: #f78da7; /* pink */
-      color: #0a1f44; /* navy text */
-      border-bottom: 2px solid #0a1f44;
-      text-align: center;
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #f78da7;
+      color: white;
       font-weight: 600;
-      font-size: 22px;
-      letter-spacing: 1px;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .back-btn:hover {
+      background-color: #e06788;
     }
 
     h1 {
-      margin: 40px 0 20px;
-      font-size: 28px;
-      color: #f78da7;
+      margin-bottom: 30px;
     }
 
     .socials {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
+      gap: 30px;
     }
 
-    .btn {
+    .socials a {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 220px;
-      padding: 12px;
-      background-color: #f78da7;
-      color: #0a1f44;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 10px;
-      font-size: 16px;
-      transition: all 0.2s ease-in-out;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
 
-    .btn:hover {
-      background-color: #e06788;
-      color: white;
+    .socials a:hover {
+      transform: scale(1.1);
     }
 
-    .btn img {
-      width: 22px;
-      height: 22px;
-    }
-
-    /* Back button */
-    .back-btn {
-      margin-top: 40px;
-      background-color: white;
-      color: #0a1f44;
-      border: 2px solid #f78da7;
-    }
-
-    .back-btn:hover {
-      background-color: #f78da7;
-      color: white;
+    .socials svg {
+      width: 40px;
+      height: 40px;
     }
   </style>
 </head>
 <body>
   <header>
-    Mckenna Johnson
+    <a href="index.html" class="back-btn">⬅ Back to Profile</a>
   </header>
 
-  <h1>Connect With Me</h1>
-
+  <h1>Connect with Me</h1>
   <div class="socials">
-    <!-- Replace the # with your actual links -->
-    <a href="https://www.instagram.com/mckjohnson23" target="_blank" class="btn">
-      <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" alt="Instagram"> Instagram
+    <!-- Snapchat Ghost -->
+    <a href="https://www.snapchat.com/add/YOURUSERNAME" target="_blank" title="Snapchat">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#FFFC00">
+        <path d="M256 0c-79.5 0-144 64.5-144 144 0 56.5 31.3 105.2 77.3 129.6-.3 12.2-2.5 28.8-8.6 39.6-7.2 12.7-20.3 22.3-39.4 28.5-8.4 2.8-13.5 12-10.7 20.5 2.9 8.7 12.3 13.6 21.1 10.8 22.2-7.3 39.6-18.7 50.8-34.2 9.5-13.2 14.7-29.8 16.4-46.8 12.2 1.8 24.7 2.8 37.1 2.8s24.9-1 37.1-2.8c1.7 17 6.9 33.6 16.4 46.8 11.2 15.5 28.6 26.9 50.8 34.2 8.8 2.8 18.2-2.1 21.1-10.8 2.8-8.5-2.3-17.7-10.7-20.5-19.1-6.2-32.2-15.8-39.4-28.5-6.1-10.8-8.3-27.4-8.6-39.6C368.7 249.2 400 200.5 400 144c0-79.5-64.5-144-144-144z"/>
+      </svg>
     </a>
-    <a href="https://www.snapchat.com/add/mckennaj2348" target="_blank" class="btn">
-      <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="Snapchat"> Snapchat
+
+    <!-- Instagram logo -->
+    <a href="https://www.instagram.com/YOURUSERNAME" target="_blank" title="Instagram">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#E4405F">
+        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 
+        114.9-114.9S287.7 141 224.1 141zm0 190.6c-41.8 0-75.7-33.9-75.7-75.7s33.9-75.7 
+        75.7-75.7 75.7 33.9 75.7 75.7-33.9 75.7-75.7 75.7zm146.4-194.3c0 14.9-12 
+        26.9-26.9 26.9s-26.9-12-26.9-26.9 12-26.9 
+        26.9-26.9 26.9 12 26.9 26.9zm76.1 27.2c-1.7-35.7-9.9-67.3-36.2-93.6s-57.9-34.5-93.6-36.2C290.7 
+        32 157.3 32 118.3 34.7c-35.7 1.7-67.3 9.9-93.6 
+        36.2S-9.8 128.8-11.5 164.5C-14.2 203.5-14.2 
+        336.9-11.5 375.9c1.7 35.7 9.9 67.3 36.2 
+        93.6s57.9 34.5 93.6 36.2c39 2.7 172.4 
+        2.7 211.4 0 35.7-1.7 67.3-9.9 93.6-36.2 
+        26.3-26.3 34.5-57.9 36.2-93.6 2.7-39 
+        2.7-172.4 0-211.4z"/>
+      </svg>
     </a>
   </div>
-
-  <a href="index.html" class="btn back-btn">⬅️ Back to Profile</a>
 </body>
 </html>
+
+        
