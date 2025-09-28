@@ -26,7 +26,6 @@
       display: flex;
       justify-content: flex-start;
       margin-bottom: 30px;
-      gap: 15px;
     }
 
     .btn {
@@ -47,14 +46,6 @@
       background-color: #e06788;
     }
 
-    .game-btn {
-      background-color: #4B0082;
-    }
-
-    .game-btn:hover {
-      background-color: #360066;
-    }
-
     h1 {
       margin-bottom: 30px;
       text-align: center;
@@ -62,7 +53,7 @@
 
     .socials {
       display: flex;
-      gap: 30px;
+      gap: 40px;
       flex-wrap: wrap;
       justify-content: center;
       margin-bottom: 30px;
@@ -72,8 +63,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 90px;
-      height: 90px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: white;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -85,21 +76,21 @@
     }
 
     .socials svg {
-      width: 55px;
-      height: 55px;
+      width: 65px;
+      height: 65px;
     }
 
     @media (max-width: 600px) {
       .socials {
-        gap: 20px;
+        gap: 25px;
       }
       .socials a {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
       }
       .socials svg {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
@@ -108,7 +99,6 @@
 
   <header>
     <a href="index.html" class="btn back-btn">⬅ Back to Profile</a>
-    <a href="hockeypong.html" class="btn game-btn">🏒 Play Hockey Pong</a>
   </header>
 
   <h1>Connect with Me</h1>
@@ -116,31 +106,38 @@
   <div class="socials">
     <!-- Snapchat Ghost -->
     <a href="https://www.snapchat.com/mckennaj2348/" target="_blank" title="Snapchat">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-        <path fill="#FFFC00" d="M128 0C57.31 0 0 57.31 0 128c0 70.69 57.31 128 128 128s128-57.31 128-128C256 57.31 198.69 0 128 0zm0 236c-60.62 0-108-49.38-108-108S67.38 20 128 20s108 49.38 108 108-47.38 108-108 108zm-36-68c0-8 6-14 14-14s14 6 14 14c0 8-6 14-14 14s-14-6-14-14zm72 0c0-8 6-14 14-14s14 6 14 14c0 8-6 14-14 14s-14-6-14-14zm-36-40c44 0 40-28 40-28s-8-12-28-12-28 12-28 12 4 28 28 28z"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path fill="black" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 
+        256-114.6 256-256S397.4 0 256 0zm106 356c-6-1-12 2-15 7-10 19-34 31-60 34-10 1-17 
+        9-17 19 0 11 9 19 20 18 35-3 68-20 84-49 4-7 2-17-5-22-3-2-6-3-9-3-1 0-2 
+        0-3 0zm-212 0c-1 0-2 0-3 0-3 0-6 1-9 3-7 5-9 15-5 22 16 29 49 46 84 
+        49 11 1 20-7 20-18 0-10-7-18-17-19-26-3-50-15-60-34-3-5-9-8-15-7z"/>
       </svg>
     </a>
 
     <!-- Instagram Camera -->
     <a href="https://www.instagram.com/mckjohnson23/" target="_blank" title="Instagram">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-        <linearGradient id="instaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#f58529"/>
-          <stop offset="30%" stop-color="#dd2a7b"/>
-          <stop offset="60%" stop-color="#8134af"/>
-          <stop offset="100%" stop-color="#515bd4"/>
-        </linearGradient>
-        <path fill="url(#instaGrad)" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 
-        114.9-51.3 114.9-114.9S287.7 141 224.1 141zm0 190.6c-41.8 0-75.7-33.9-75.7-75.7s33.9-75.7 75.7-75.7 
-        75.7 33.9 75.7 75.7-33.9 75.7-75.7 75.7zm146.4-194.3c0 14.9-12 26.9-26.9 26.9s-26.9-12-26.9-26.9 
-        12-26.9 26.9-26.9 26.9 12 26.9 26.9zm76.1 27.2c-1.7-35.7-9.9-67.3-36.2-93.6s-57.9-34.5-93.6-36.2C290.7 
-        32 157.3 32 118.3 34.7c-35.7 1.7-67.3 9.9-93.6 36.2S-9.8 128.8-11.5 164.5C-14.2 203.5-14.2 336.9-11.5 
-        375.9c1.7 35.7 9.9 67.3 36.2 93.6s57.9 34.5 93.6 36.2c39 2.7 172.4 2.7 211.4 0 35.7-1.7 67.3-9.9 
-        93.6-36.2 26.3-26.3 34.5-57.9 36.2-93.6 2.7-39 2.7-172.4 0-211.4z"/>
+        <path fill="black" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9S160.5 370.8 
+        224.1 370.8 339 319.5 339 255.9 287.7 141 224.1 141zm0 
+        190.6c-41.8 0-75.7-33.9-75.7-75.7s33.9-75.7 
+        75.7-75.7 75.7 33.9 75.7 75.7-33.9 
+        75.7-75.7 75.7zm146.4-194.3c0 
+        14.9-12 26.9-26.9 26.9s-26.9-12-26.9-26.9 
+        12-26.9 26.9-26.9 26.9 12 26.9 
+        26.9zm76.1 27.2c-1.7-35.7-9.9-67.3-36.2-93.6s-57.9-34.5-93.6-36.2C290.7 
+        32 157.3 32 118.3 34.7c-35.7 1.7-67.3 
+        9.9-93.6 36.2S-9.8 128.8-11.5 
+        164.5C-14.2 203.5-14.2 336.9-11.5 
+        375.9c1.7 35.7 9.9 67.3 36.2 
+        93.6s57.9 34.5 93.6 36.2c39 2.7 
+        172.4 2.7 211.4 0 35.7-1.7 
+        67.3-9.9 93.6-36.2 26.3-26.3 
+        34.5-57.9 36.2-93.6 2.7-39 
+        2.7-172.4 0-211.4z"/>
       </svg>
     </a>
   </div>
 
 </body>
 </html>
-
