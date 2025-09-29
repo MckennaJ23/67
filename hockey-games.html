@@ -4,365 +4,360 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🏒 Hockey Game Hub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #0a1f44; /* navy */
-      color: #fff;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #0a1f44, #f78da7);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
+      min-height: 100vh;
     }
 
     header {
-      background: #f78da7; /* pink */
       padding: 15px;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background: #0a1f44;
+      width: 100%;
+      color: #f78da7;
+      border-bottom: 3px solid #f78da7;
     }
 
-    h1 {
+    canvas {
+      background: #cce6ff;
+      border: 4px solid white;
       margin: 20px;
-      color: #f78da7;
+      display: none;
+    }
+
+    .menu, .controls {
+      margin: 20px;
     }
 
     .btn {
-      display: inline-block;
-      margin: 10px;
-      padding: 12px 20px;
       background: #f78da7;
+      border: none;
       color: white;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 10px;
-      transition: 0.2s;
+      font-size: 18px;
+      padding: 12px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
+
     .btn:hover {
       background: #e06788;
     }
 
-    canvas {
-      background: #cce6ff; /* ice color */
-      border: 4px solid #f78da7;
-      display: none;
-      margin: 20px auto;
-      border-radius: 10px;
-      max-width: 100%;
-      height: auto;
-    }
-
     #scoreboard {
-      font-size: 20px;
-      font-weight: 600;
-      margin-top: 10px;
+      font-size: 22px;
+      margin: 10px;
+      font-weight: bold;
     }
 
-    #controls {
-      margin: 15px;
-    }
-    .control-btn {
-      background: #f78da7;
-      border: none;
-      padding: 10px 15px;
-      margin: 5px;
-      color: white;
-      font-size: 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .control-btn:active {
-      background: #e06788;
-    }
-
-    #playAgain {
+    /* Mobile buttons */
+    .mobile-controls {
       display: none;
-      margin-top: 15px;
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
     }
 
-    .flash {
-      animation: flashRed 0.3s ease-in-out 3;
+    .mobile-btn {
+      width: 60px;
+      height: 60px;
+      background: rgba(247, 141, 167, 0.8);
+      border-radius: 50%;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      user-select: none;
     }
-    @keyframes flashRed {
-      0% { background-color: #cce6ff; }
-      50% { background-color: #ff4d6d; }
-      100% { background-color: #cce6ff; }
+
+    @media (max-width: 768px) {
+      .mobile-controls { display: flex; }
+    }
+
+    /* Goal light effect */
+    #goalLight {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,0,0,0.5);
+      display: none;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
   <header>🏒 Hockey Game Hub</header>
-  <h1>Choose Your Game</h1>
 
-  <!-- Menu -->
-  <div id="menu">
-    <a href="#" class="btn" onclick="startPong()">Hockey Pong</a>
-    <a href="#" class="btn" onclick="startShootout()">Shootout</a>
+  <div class="menu" id="menu">
+    <button class="btn" onclick="startGame('pong')">Hockey Pong</button>
+    <button class="btn" onclick="startGame('shootout')">Shootout</button>
     <a href="index.html" class="btn">⬅️ Back to Profile</a>
   </div>
 
-  <!-- Scoreboard -->
   <div id="scoreboard"></div>
+  <canvas id="gameCanvas" width="900" height="500"></canvas>
+  <button id="playAgain" class="btn" style="display:none;" onclick="restartGame()">🔁 Play Again</button>
 
-  <!-- Game Controls (mobile-friendly) -->
-  <div id="controls" style="display:none;">
-    <button class="control-btn" onclick="moveUp()">⬆️</button>
-    <button class="control-btn" onclick="moveDown()">⬇️</button>
-    <button class="control-btn" onclick="shoot()">🎯 Shoot</button>
+  <!-- Mobile Controls -->
+  <div class="mobile-controls" id="mobileControls">
+    <div class="mobile-btn" id="btnUp">⬆️</div>
+    <div class="mobile-btn" id="btnDown">⬇️</div>
+    <div class="mobile-btn" id="btnLeft">⬅️</div>
+    <div class="mobile-btn" id="btnRight">➡️</div>
+    <div class="mobile-btn" id="btnShoot">🎯</div>
   </div>
 
-  <!-- Canvas -->
-  <canvas id="gameCanvas" width="900" height="500"></canvas>
+  <!-- Goal light overlay -->
+  <div id="goalLight"></div>
 
-  <!-- Play Again Button -->
-  <button id="playAgain" class="btn" onclick="restartGame()">🔄 Play Again</button>
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const scoreboard = document.getElementById("scoreboard");
+const playAgainBtn = document.getElementById("playAgain");
+const goalLight = document.getElementById("goalLight");
 
-  <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const scoreboard = document.getElementById("scoreboard");
-    const playAgainBtn = document.getElementById("playAgain");
-    const controls = document.getElementById("controls");
-    let gameRunning = false;
-    let gameMode = "";
+let gameType = "";
+let gameRunning = false;
 
-    // Sounds
-    const puckHit = new Audio("https://freesound.org/data/previews/66/66717_634166-lq.mp3");
-    const goalHorn = new Audio("https://freesound.org/data/previews/82/82726_1022652-lq.mp3");
-    const crowdCheer = new Audio("https://freesound.org/data/previews/198/198841_2859972-lq.mp3");
+// Hockey Pong setup
+let paddleHeight = 100, paddleWidth = 20, puckRadius = 12;
+let leftPaddle, rightPaddle, puck;
+let leftScore = 0, rightScore = 0;
 
-    // Hockey Pong variables
-    let player, ai, puck, pongScore, period, maxScore;
+// Shootout setup
+let shooter, goalie, shotActive, shotX, shotY, shotDx, shotDy;
+let playerGoals = 0, aiSaves = 0;
 
-    function resetPong() {
-      player = { x: 30, y: canvas.height / 2 - 50, width: 15, height: 100, dy: 0 };
-      ai = { x: canvas.width - 45, y: canvas.height / 2 - 50, width: 15, height: 100, dy: 4 };
-      puck = { x: canvas.width / 2, y: canvas.height / 2, size: 12, dx: 5, dy: 4 };
-      pongScore = { player: 0, ai: 0 };
-      period = 1;
-      maxScore = 5;
+function startGame(type) {
+  document.getElementById("menu").style.display = "none";
+  canvas.style.display = "block";
+  scoreboard.style.display = "block";
+  playAgainBtn.style.display = "none";
+  gameType = type;
+  gameRunning = true;
+
+  if (type === "pong") initPong();
+  else initShootout();
+
+  requestAnimationFrame(gameLoop);
+}
+
+function restartGame() {
+  leftScore = rightScore = playerGoals = aiSaves = 0;
+  startGame(gameType);
+}
+
+function showGoalLight() {
+  goalLight.style.display = "block";
+  setTimeout(() => { goalLight.style.display = "none"; }, 400);
+}
+
+/* ------------------- HOCKEY PONG ------------------- */
+function initPong() {
+  leftPaddle = { x: 20, y: canvas.height/2 - paddleHeight/2, dy: 0 };
+  rightPaddle = { x: canvas.width-40, y: canvas.height/2 - paddleHeight/2, dy: 0, speed: 3 };
+  puck = { x: canvas.width/2, y: canvas.height/2, dx: 4, dy: 3 };
+
+  updateScoreboard();
+}
+
+function updatePong() {
+  puck.x += puck.dx;
+  puck.y += puck.dy;
+
+  if (puck.y - puckRadius < 0 || puck.y + puckRadius > canvas.height) {
+    puck.dy *= -1;
+  }
+
+  // Left paddle collision
+  if (puck.x - puckRadius < leftPaddle.x + paddleWidth &&
+      puck.y > leftPaddle.y && puck.y < leftPaddle.y + paddleHeight) {
+    puck.dx *= -1.1; // faster after hit
+    let hitPos = (puck.y - (leftPaddle.y + paddleHeight/2)) / 25;
+    puck.dy = hitPos * 5;
+  }
+
+  // Right paddle collision
+  if (puck.x + puckRadius > rightPaddle.x &&
+      puck.y > rightPaddle.y && puck.y < rightPaddle.y + paddleHeight) {
+    puck.dx *= -1.1;
+    let hitPos = (puck.y - (rightPaddle.y + paddleHeight/2)) / 25;
+    puck.dy = hitPos * 5;
+  }
+
+  // Goals
+  if (puck.x < 0) {
+    rightScore++;
+    showGoalLight();
+    resetPuck();
+  } else if (puck.x > canvas.width) {
+    leftScore++;
+    showGoalLight();
+    resetPuck();
+  }
+
+  // AI follows puck
+  if (puck.y > rightPaddle.y + paddleHeight/2) rightPaddle.y += rightPaddle.speed;
+  else rightPaddle.y -= rightPaddle.speed;
+
+  leftPaddle.y += leftPaddle.dy;
+  leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y));
+
+  updateScoreboard();
+}
+
+function resetPuck() {
+  puck.x = canvas.width/2;
+  puck.y = canvas.height/2;
+  puck.dx = 4 * (Math.random() > 0.5 ? 1 : -1);
+  puck.dy = 3 * (Math.random() > 0.5 ? 1 : -1);
+}
+
+function drawPong() {
+  ctx.fillStyle = "#cce6ff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#f78da7";
+  ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
+
+  ctx.fillStyle = "#0a1f44";
+  ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
+
+  ctx.beginPath();
+  ctx.arc(puck.x, puck.y, puckRadius, 0, Math.PI*2);
+  ctx.fillStyle = "#000";
+  ctx.fill();
+}
+
+/* ------------------- SHOOTOUT ------------------- */
+function initShootout() {
+  shooter = { x: canvas.width/2, y: canvas.height-50, speed: 6 };
+  goalie = { x: canvas.width/2-50, y: 50, width: 100, height: 20, dir: 3 };
+  shotActive = false;
+  updateScoreboard();
+}
+
+function updateShootout() {
+  // Goalie movement
+  goalie.x += goalie.dir;
+  if (goalie.x < 0 || goalie.x + goalie.width > canvas.width) goalie.dir *= -1;
+
+  if (shotActive) {
+    shotX += shotDx;
+    shotY += shotDy;
+
+    if (shotY < goalie.y + goalie.height &&
+        shotX > goalie.x && shotX < goalie.x + goalie.width) {
+      aiSaves++;
+      shotActive = false;
     }
 
-    function drawRink() {
-      ctx.fillStyle = "#cce6ff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = "#ff0000";
-      ctx.lineWidth = 2;
-
-      // Center line
-      ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 0);
-      ctx.lineTo(canvas.width / 2, canvas.height);
-      ctx.stroke();
-
-      // Center circle
-      ctx.beginPath();
-      ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
-      ctx.stroke();
+    if (shotY < 0) {
+      playerGoals++;
+      showGoalLight();
+      shotActive = false;
     }
+  }
+  updateScoreboard();
+}
 
-    function drawPong() {
-      drawRink();
+function drawShootout() {
+  ctx.fillStyle = "#cce6ff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#f78da7";
-      ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.fillStyle = "#0a1f44";
+  ctx.fillRect(goalie.x, goalie.y, goalie.width, goalie.height);
 
-      ctx.fillStyle = "#0a1f44";
-      ctx.fillRect(ai.x, ai.y, ai.width, ai.height);
+  ctx.fillStyle = "#f78da7";
+  ctx.beginPath();
+  ctx.arc(shooter.x, shooter.y, 15, 0, Math.PI*2);
+  ctx.fill();
 
-      ctx.fillStyle = "#000";
-      ctx.beginPath();
-      ctx.arc(puck.x, puck.y, puck.size, 0, Math.PI * 2);
-      ctx.fill();
+  if (shotActive) {
+    ctx.beginPath();
+    ctx.arc(shotX, shotY, 8, 0, Math.PI*2);
+    ctx.fillStyle = "#000";
+    ctx.fill();
+  }
+}
 
-      scoreboard.textContent = `Period ${period} | You: ${pongScore.player} - AI: ${pongScore.ai}`;
+/* ------------------- CORE LOOP ------------------- */
+function gameLoop() {
+  if (!gameRunning) return;
+
+  if (gameType === "pong") {
+    updatePong();
+    drawPong();
+  } else {
+    updateShootout();
+    drawShootout();
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+function updateScoreboard() {
+  if (gameType === "pong")
+    scoreboard.innerText = `Player: ${leftScore} | AI: ${rightScore}`;
+  else
+    scoreboard.innerText = `Goals: ${playerGoals} | Saves: ${aiSaves}`;
+}
+
+/* ------------------- CONTROLS ------------------- */
+// Keyboard
+document.addEventListener("keydown", e => {
+  if (gameType === "pong") {
+    if (e.key === "ArrowUp") leftPaddle.dy = -6;
+    if (e.key === "ArrowDown") leftPaddle.dy = 6;
+  }
+  if (gameType === "shootout") {
+    if (e.key === "ArrowLeft") shooter.x -= shooter.speed;
+    if (e.key === "ArrowRight") shooter.x += shooter.speed;
+    if (e.key === " " && !shotActive) {
+      shotActive = true;
+      shotX = shooter.x;
+      shotY = shooter.y - 20;
+      shotDx = 0;
+      shotDy = -8;
     }
+  }
+});
+document.addEventListener("keyup", e => {
+  if (gameType === "pong" && (e.key === "ArrowUp" || e.key === "ArrowDown")) leftPaddle.dy = 0;
+});
 
-    function updatePong() {
-      player.y += player.dy;
-      if (player.y < 0) player.y = 0;
-      if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
-
-      if (puck.y < ai.y + ai.height / 2) ai.y -= ai.dy;
-      if (puck.y > ai.y + ai.height / 2) ai.y += ai.dy;
-
-      puck.x += puck.dx;
-      puck.y += puck.dy;
-
-      if (puck.y - puck.size < 0 || puck.y + puck.size > canvas.height) {
-        puck.dy *= -1;
-        puckHit.play();
-      }
-
-      if (puck.x - puck.size < player.x + player.width &&
-          puck.y > player.y && puck.y < player.y + player.height) {
-        puck.dx *= -1;
-        puck.x = player.x + player.width + puck.size;
-        puckHit.play();
-      }
-
-      if (puck.x + puck.size > ai.x &&
-          puck.y > ai.y && puck.y < ai.y + ai.height) {
-        puck.dx *= -1;
-        puck.x = ai.x - puck.size;
-        puckHit.play();
-      }
-
-      if (puck.x < 0) {
-        pongScore.ai++;
-        goalHorn.play();
-        crowdCheer.play();
-        canvas.classList.add("flash");
-        setTimeout(() => canvas.classList.remove("flash"), 1000);
-        resetPuck();
-      }
-      if (puck.x > canvas.width) {
-        pongScore.player++;
-        goalHorn.play();
-        crowdCheer.play();
-        canvas.classList.add("flash");
-        setTimeout(() => canvas.classList.remove("flash"), 1000);
-        resetPuck();
-      }
-
-      if (pongScore.player >= maxScore || pongScore.ai >= maxScore) {
-        endGame();
-      }
-    }
-
-    function resetPuck() {
-      puck.x = canvas.width / 2;
-      puck.y = canvas.height / 2;
-      puck.dx *= Math.random() > 0.5 ? 1 : -1;
-      puck.dy *= Math.random() > 0.5 ? 1 : -1;
-    }
-
-    // Shootout variables
-    let goalie, shot, shootoutScore;
-
-    function resetShootout() {
-      goalie = { x: canvas.width / 2 - 40, y: 60, width: 80, height: 20, dx: 6 };
-      shot = null;
-      shootoutScore = { goals: 0, shots: 0, maxShots: 5 };
-    }
-
-    function drawShootout() {
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = "#0a1f44";
-      ctx.strokeRect(canvas.width / 2 - 100, 20, 200, 40);
-
-      ctx.fillStyle = "#f78da7";
-      ctx.fillRect(goalie.x, goalie.y, goalie.width, goalie.height);
-
-      if (shot) {
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(shot.x, shot.y, 10, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      scoreboard.textContent = `Shootout | Goals: ${shootoutScore.goals} / Shots: ${shootoutScore.shots}`;
-    }
-
-    function updateShootout() {
-      goalie.x += goalie.dx;
-      if (goalie.x < canvas.width / 2 - 100 || goalie.x + goalie.width > canvas.width / 2 + 100) {
-        goalie.dx *= -1;
-      }
-
-      if (shot) {
-        shot.y -= 10;
-        if (shot.y < 80 &&
-            shot.x > goalie.x &&
-            shot.x < goalie.x + goalie.width) {
-          shootoutScore.shots++;
-          shot = null;
-        } else if (shot.y < 20) {
-          shootoutScore.goals++;
-          shootoutScore.shots++;
-          shot = null;
-        }
-      }
-
-      if (shootoutScore.shots >= shootoutScore.maxShots) {
-        endGame();
-      }
-    }
-
-    // Game Loop
-    function loop() {
-      if (!gameRunning) return;
-
-      if (gameMode === "pong") {
-        updatePong();
-        drawPong();
-      } else if (gameMode === "shootout") {
-        updateShootout();
-        drawShootout();
-      }
-
-      requestAnimationFrame(loop);
-    }
-
-    // Start Games
-    function startPong() {
-      resetPong();
-      gameMode = "pong";
-      gameRunning = true;
-      canvas.style.display = "block";
-      playAgainBtn.style.display = "none";
-      controls.style.display = "block";
-      loop();
-    }
-
-    function startShootout() {
-      resetShootout();
-      gameMode = "shootout";
-      gameRunning = true;
-      canvas.style.display = "block";
-      playAgainBtn.style.display = "none";
-      controls.style.display = "block";
-      loop();
-    }
-
-    function endGame() {
-      gameRunning = false;
-      playAgainBtn.style.display = "block";
-    }
-
-    function restartGame() {
-      if (gameMode === "pong") startPong();
-      else if (gameMode === "shootout") startShootout();
-    }
-
-    // Keyboard Controls
-    document.addEventListener("keydown", e => {
-      if (gameMode === "pong") {
-        if (e.key === "ArrowUp") player.dy = -6;
-        if (e.key === "ArrowDown") player.dy = 6;
-      } else if (gameMode === "shootout") {
-        if (e.key === " " && !shot) {
-          shot = { x: canvas.width / 2, y: canvas.height - 30 };
-        }
-      }
-    });
-
-    document.addEventListener("keyup", e => {
-      if (gameMode === "pong" && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
-        player.dy = 0;
-      }
-    });
-
-    // Mobile Controls
-    function moveUp() { if (gameMode === "pong") player.y -= 20; }
-    function moveDown() { if (gameMode === "pong") player.y += 20; }
-    function shoot() { if (gameMode === "shootout" && !shot) shot = { x: canvas.width / 2, y: canvas.height - 30 }; }
-  </script>
+// Mobile buttons
+document.getElementById("btnUp").onclick = () => leftPaddle.dy = -6;
+document.getElementById("btnDown").onclick = () => leftPaddle.dy = 6;
+document.getElementById("btnLeft").onclick = () => { if (gameType==="shootout") shooter.x -= shooter.speed; };
+document.getElementById("btnRight").onclick = () => { if (gameType==="shootout") shooter.x += shooter.speed; };
+document.getElementById("btnShoot").onclick = () => {
+  if (gameType==="shootout" && !shotActive) {
+    shotActive = true;
+    shotX = shooter.x;
+    shotY = shooter.y - 20;
+    shotDx = 0;
+    shotDy = -8;
+  }
+};
+</script>
 </body>
 </html>
+
 
