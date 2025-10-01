@@ -1,245 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hockey Pong</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #e1e8f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-  }
-  header {
-    width: 100%;
-    padding: 12px 18px;
-    background: #003366;
-    color: #fff;
-    font-weight: 600;
-    font-size: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  a.back-profile {
-    background: #fff;
-    color: #003366;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-  }
-  canvas {
-    margin-top: 40px;
-    border: 5px solid #003366;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-  }
-  .controls {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .btn {
-    background: #003366;
-    color: #fff;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .score {
-    font-weight: 700;
-    font-size: 20px;
-    color: #003366;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hockey Pong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #dce6f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: #00274d;
+      color: #fff;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: 600;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    a.back-btn {
+      background: #fff;
+      color: #00274d;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    canvas {
+      margin: 30px 0;
+      background: #fff;
+      border: 6px solid #00274d;
+      border-radius: 10px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+    }
+    .scoreboard {
+      font-size: 24px;
+      font-weight: 600;
+      color: #00274d;
+      margin: 10px 0;
+    }
+    .btn {
+      background: #00274d;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #004080;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    Hockey Pong
+    <a href="index.html" class="back-btn">⬅ Back to Profile</a>
+  </header>
 
-<header>
-  Hockey Pong
-  <a href="index.html" class="back-profile">⬅ Back to Profile</a>
-</header>
+  <canvas id="gameCanvas" width="900" height="500"></canvas>
+  <div class="scoreboard" id="score">0 — 0</div>
+  <button class="btn" id="playAgain">Play Again</button>
 
-<canvas id="pongCanvas" width="900" height="500"></canvas>
-<div class="controls">
-  <button id="playAgain" class="btn">Play Again</button>
-  <div class="score" id="scoreDisplay">0 — 0</div>
-  <div style="flex:1"></div>
-  <div>Use ↑ / ↓ to move your stick</div>
-</div>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("score");
 
-<script>
-const canvas = document.getElementById('pongCanvas');
-const ctx = canvas.getContext('2d');
+    // Game state
+    let player = { x: 20, y: canvas.height/2 - 50, w: 15, h: 100, dy: 0 };
+    let ai = { x: canvas.width - 35, y: canvas.height/2 - 50, w: 15, h: 100, speed: 4 };
+    let puck = { x: canvas.width/2, y: canvas.height/2, r: 12, dx: 5, dy: 4 };
 
-let state = {};
-let raf = null;
+    let playerScore = 0, aiScore = 0, maxScore = 5;
+    let gameOver = false;
 
-function initGame() {
-  state = {
-    paddleW: 20,
-    paddleH: 100,
-    puckR: 12,
-    leftPaddle: {x:20, y:canvas.height/2 - 50, dy:0},
-    rightPaddle: {x:canvas.width - 40, y:canvas.height/2 - 50, speed:4},
-    puck: {x:canvas.width/2, y:canvas.height/2, dx:5, dy:4, trail:[]},
-    leftScore:0,
-    rightScore:0,
-    maxScore:5,
-    gameOver:false
-  };
-  updateScore();
-}
+    function resetPuck() {
+      puck.x = canvas.width/2;
+      puck.y = canvas.height/2;
+      puck.dx = (Math.random() > 0.5 ? 5 : -5);
+      puck.dy = (Math.random() > 0.5 ? 4 : -4);
+    }
 
-function draw() {
-  // rink background
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+    function drawRink() {
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // center line
-  ctx.strokeStyle = 'red';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(canvas.width/2,0);
-  ctx.lineTo(canvas.width/2,canvas.height);
-  ctx.stroke();
+      // center line
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width/2,0);
+      ctx.lineTo(canvas.width/2,canvas.height);
+      ctx.stroke();
 
-  // center circle
-  ctx.strokeStyle = 'blue';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(canvas.width/2, canvas.height/2, 60,0,Math.PI*2);
-  ctx.stroke();
+      // center circle
+      ctx.strokeStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(canvas.width/2, canvas.height/2, 60, 0, Math.PI*2);
+      ctx.stroke();
+    }
 
-  // paddles (sticks)
-  ctx.fillStyle = '#333';
-  [state.leftPaddle, state.rightPaddle].forEach(p=>{
-    ctx.beginPath();
-    ctx.moveTo(p.x,p.y);
-    ctx.lineTo(p.x + 12, p.y + state.paddleH/2);
-    ctx.lineTo(p.x, p.y + state.paddleH);
-    ctx.fill();
-  });
+    function drawObjects() {
+      // paddles
+      ctx.fillStyle = "#333";
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillRect(ai.x, ai.y, ai.w, ai.h);
 
-  // puck trail
-  state.puck.trail.forEach((pos,i)=>{
-    ctx.fillStyle = `rgba(0,0,0,${0.25 - i*0.02})`;
-    ctx.beginPath();
-    ctx.arc(pos.x,pos.y,state.puckR,0,Math.PI*2);
-    ctx.fill();
-  });
-  // puck
-  ctx.fillStyle = '#000';
-  ctx.beginPath();
-  ctx.arc(state.puck.x,state.puck.y,state.puckR,0,Math.PI*2);
-  ctx.fill();
+      // puck
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(puck.x, puck.y, puck.r, 0, Math.PI*2);
+      ctx.fill();
+    }
 
-  // scores
-  ctx.fillStyle = '#003366';
-  ctx.font = '32px Poppins';
-  ctx.fillText(state.leftScore, canvas.width/4, 48);
-  ctx.fillText(state.rightScore, 3*canvas.width/4, 48);
-}
+    function update() {
+      if(gameOver) return;
 
-function update() {
-  if(state.gameOver) return;
-  // move puck
-  state.puck.x += state.puck.dx;
-  state.puck.y += state.puck.dy;
+      // move player
+      player.y += player.dy;
+      if(player.y < 0) player.y = 0;
+      if(player.y + player.h > canvas.height) player.y = canvas.height - player.h;
 
-  // trail
-  state.puck.trail.unshift({x:state.puck.x,y:state.puck.y});
-  if(state.puck.trail.length>10) state.puck.trail.pop();
+      // move AI
+      let target = puck.y - ai.h/2;
+      if(ai.y < target) ai.y += ai.speed;
+      else if(ai.y > target) ai.y -= ai.speed;
 
-  // bounce top/bottom
-  if(state.puck.y + state.puckR > canvas.height || state.puck.y - state.puckR < 0){
-    state.puck.dy *= -1;
-  }
+      // move puck
+      puck.x += puck.dx;
+      puck.y += puck.dy;
 
-  // paddle collision
-  const lp = state.leftPaddle, rp = state.rightPaddle;
-  if(state.puck.x - state.puckR < lp.x + state.paddleW && state.puck.y > lp.y && state.puck.y < lp.y + state.paddleH){
-    state.puck.dx = Math.abs(state.puck.dx) + 0.2;
-    state.puck.dx *= -1;
-  }
-  if(state.puck.x + state.puckR > rp.x && state.puck.y > rp.y && state.puck.y < rp.y + state.paddleH){
-    state.puck.dx = -Math.abs(state.puck.dx) - 0.2;
-    state.puck.dx *= -1;
-  }
+      // bounce walls
+      if(puck.y - puck.r < 0 || puck.y + puck.r > canvas.height) {
+        puck.dy *= -1;
+      }
 
-  // score
-  if(state.puck.x < 0){ state.rightScore++; resetPuck(); checkWin(); }
-  if(state.puck.x > canvas.width){ state.leftScore++; resetPuck(); checkWin(); }
+      // collisions
+      if(puck.x - puck.r < player.x + player.w &&
+         puck.y > player.y && puck.y < player.y + player.h) {
+        puck.dx = Math.abs(puck.dx);
+      }
 
-  // move player paddle
-  lp.y += lp.dy;
-  lp.y = Math.max(0, Math.min(lp.y, canvas.height - state.paddleH));
+      if(puck.x + puck.r > ai.x &&
+         puck.y > ai.y && puck.y < ai.y + ai.h) {
+        puck.dx = -Math.abs(puck.dx);
+      }
 
-  // AI paddle
-  const target = state.puck.y - state.paddleH/2;
-  if(rp.y + rp.speed < target) rp.y += rp.speed;
-  else if(rp.y - rp.speed > target) rp.y -= rp.speed;
-  rp.y = Math.max(0, Math.min(rp.y, canvas.height - state.paddleH));
-}
+      // scoring
+      if(puck.x < 0) {
+        aiScore++;
+        resetPuck();
+      }
+      if(puck.x > canvas.width) {
+        playerScore++;
+        resetPuck();
+      }
 
-function resetPuck() {
-  state.puck.x = canvas.width/2;
-  state.puck.y = canvas.height/2;
-  state.puck.dx = 5 * (Math.random() > 0.5 ? 1 : -1);
-  state.puck.dy = 3 * (Math.random() > 0.5 ? 1 : -1);
-  state.puck.trail = [];
-}
+      // update score
+      scoreDisplay.textContent = `${playerScore} — ${aiScore}`;
 
-function checkWin() {
-  updateScore();
-  if(state.leftScore >= state.maxScore || state.rightScore >= state.maxScore){
-    state.gameOver = true;
-    alert(state.leftScore > state.rightScore ? 'You Win!' : 'AI Wins!');
-  }
-}
+      if(playerScore >= maxScore || aiScore >= maxScore) {
+        gameOver = true;
+        setTimeout(() => alert(playerScore > aiScore ? "You Win!" : "AI Wins!"), 100);
+      }
+    }
 
-function updateScore() {
-  document.getElementById('scoreDisplay').textContent = `${state.leftScore} — ${state.rightScore}`;
-}
+    function draw() {
+      drawRink();
+      drawObjects();
+    }
 
-function loop() {
-  update();
-  draw();
-  raf = requestAnimationFrame(loop);
-}
+    function loop() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
 
-// player controls
-document.addEventListener('keydown', e=>{
-  if(e.key === 'ArrowUp') state.leftPaddle.dy = -6;
-  if(e.key === 'ArrowDown') state.leftPaddle.dy = 6;
-});
-document.addEventListener('keyup', e=>{
-  if(e.key==='ArrowUp' || e.key==='ArrowDown') state.leftPaddle.dy = 0;
-});
+    // controls
+    document.addEventListener("keydown", e => {
+      if(e.key === "ArrowUp") player.dy = -6;
+      if(e.key === "ArrowDown") player.dy = 6;
+    });
+    document.addEventListener("keyup", e => {
+      if(e.key === "ArrowUp" || e.key === "ArrowDown") player.dy = 0;
+    });
 
-// Play again
-document.getElementById('playAgain').addEventListener('click', ()=>{
-  initGame();
-  state.gameOver = false;
-});
+    // play again
+    document.getElementById("playAgain").addEventListener("click", () => {
+      playerScore = 0;
+      aiScore = 0;
+      gameOver = false;
+      resetPuck();
+      scoreDisplay.textContent = "0 — 0";
+    });
 
-initGame();
-loop();
-</script>
+    resetPuck();
+    loop();
+  </script>
 </body>
 </html>
-
-
-
-
-
